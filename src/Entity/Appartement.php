@@ -3,9 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\AppartementRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AppartementRepository::class)]
@@ -16,94 +13,112 @@ class Appartement
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $address = null;
+    #[ORM\Column(length: 255)]
+    private ?string $Name = null;
 
-    #[ORM\OneToMany(mappedBy: 'appartementId', targetEntity: Room::class, orphanRemoval: true)]
-    private Collection $rooms;
+    #[ORM\Column(length: 255)]
+    private ?string $Address = null;
 
-    #[ORM\OneToMany(mappedBy: 'appartementId', targetEntity: User::class)]
-    private Collection $roomates;
+    #[ORM\Column(nullable: true)]
+    private ?int $StreetNumber = null;
 
-    public function __construct()
-    {
-        $this->rooms = new ArrayCollection();
-        $this->roomates = new ArrayCollection();
-    }
+    #[ORM\Column(length: 255)]
+    private ?string $City = null;
+
+    #[ORM\Column]
+    private ?float $LivingSpace = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $Price = null;
+
+    #[ORM\Column]
+    private ?int $Owner = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    public function getName(): ?string
+    {
+        return $this->Name;
+    }
+
+    public function setName(string $Name): self
+    {
+        $this->Name = $Name;
+
+        return $this;
+    }
+
     public function getAddress(): ?string
     {
-        return $this->address;
+        return $this->Address;
     }
 
-    public function setAddress(string $address): self
+    public function setAddress(string $Address): self
     {
-        $this->address = $address;
+        $this->Address = $Address;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Room>
-     */
-    public function getRooms(): Collection
+    public function getStreetNumber(): ?int
     {
-        return $this->rooms;
+        return $this->StreetNumber;
     }
 
-    public function addRoom(Room $room): self
+    public function setStreetNumber(?int $StreetNumber): self
     {
-        if (!$this->rooms->contains($room)) {
-            $this->rooms->add($room);
-            $room->setAppartementId($this);
-        }
+        $this->StreetNumber = $StreetNumber;
 
         return $this;
     }
 
-    public function removeRoom(Room $room): self
+    public function getCity(): ?string
     {
-        if ($this->rooms->removeElement($room)) {
-            // set the owning side to null (unless already changed)
-            if ($room->getAppartementId() === $this) {
-                $room->setAppartementId(null);
-            }
-        }
+        return $this->City;
+    }
+
+    public function setCity(string $City): self
+    {
+        $this->City = $City;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getRoomates(): Collection
+    public function getLivingSpace(): ?float
     {
-        return $this->roomates;
+        return $this->LivingSpace;
     }
 
-    public function addRoomate(User $roomate): self
+    public function setLivingSpace(float $LivingSpace): self
     {
-        if (!$this->roomates->contains($roomate)) {
-            $this->roomates->add($roomate);
-            $roomate->setAppartementId($this);
-        }
+        $this->LivingSpace = $LivingSpace;
 
         return $this;
     }
 
-    public function removeRoomate(User $roomate): self
+    public function getPrice(): ?float
     {
-        if ($this->roomates->removeElement($roomate)) {
-            // set the owning side to null (unless already changed)
-            if ($roomate->getAppartementId() === $this) {
-                $roomate->setAppartementId(null);
-            }
-        }
+        return $this->Price;
+    }
+
+    public function setPrice(?float $Price): self
+    {
+        $this->Price = $Price;
+
+        return $this;
+    }
+
+    public function getOwner(): ?int
+    {
+        return $this->Owner;
+    }
+
+    public function setOwner(int $Owner): self
+    {
+        $this->Owner = $Owner;
 
         return $this;
     }

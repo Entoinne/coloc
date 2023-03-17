@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="bg-white">
+        <div>
+            <section class="bg-gray-50 dark:bg-gray-900">
+                <div class="flex flex-col items-center justify-center bg-white">
+                    <a href={{path('app_appartement')}} class="m-4 btn-primary inline-flex items-center px-2 py-1 rounded-lg text-sm font-medium text-center">Voir les appartements</a>
+                    <form method="post">
+                        {{ form(form) }}
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+{% endblock body %}

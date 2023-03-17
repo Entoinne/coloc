@@ -1,35 +1,81 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AppartementsController!{% endblock %}
+{% block title %}Hello AppartementController!{% endblock %}
 
 {% block body %}
-<!--
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
--->
-<div class="bg-white">
-  <div class="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-    <h2 class="sr-only">Products</h2>
-
-    <div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-      <a href="#" class="group">
-        <div class="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8">
-          <img src="https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg" alt="Tall slender porcelain bottle with natural clay textured body and cork stopper." class="h-full w-full object-cover object-center group-hover:opacity-75">
+    {% if is_granted('ROLE_OWNER') %}
+        <div class="w-full flex justify-center">
+            <a class="m-2 btn-success px-2 py-1 rounded-lg text-sm font-medium text-center"
+               href="{{ path('new_appartement', {id: app.user.id}) }}"> Nouveau</a>
         </div>
-        <h3 class="mt-4 text-sm text-gray-700">Earthen Bottle</h3>
-        <p class="mt-1 text-lg font-medium text-gray-900">$48</p>
-      </a>
+    {% endif %}
+    <div class="flex">
+        {% if(appartements) %}
+            {% for appartement in appartements %}
+                <div class="m-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow bg-gray-800 border-gray-700 mt-3 mb-3">
+                    <a href="#">
+                        <img class="rounded-t-lg" src="{{ asset('src/img/appartement/Appart.jpg') }}" alt=""/>
+                    </a>
+                    <div class="p-5">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-black">{{ appartement.name }}</h5>
+                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ appartement.streetNumber }} {{ appartement.address }}
+                            , {{ appartement.city }}</p>
+                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ appartement.livingSpace }}
+                            m², {{ appartement.price }}€/Mois</p>
+                        {% if is_granted('ROLE_OWNER') %}
+                            <div class="flex">
+                                <a href="{{ path('edit_appartement', {id: appartement.id}) }}"
+                                   class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    Modifier
+                                    <svg aria-hidden="true" class="w-4 h-4 ml-2 -mr-1" fill="currentColor"
+                                         viewBox="0 0 20 20"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                              d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                                              clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>
+                                <a href="{{ path('delete_appartement', {id: appartement.id}) }}"
+                                   class="ml-2 btn-danger inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium text-center">
+                                    Supprimer
+                                    <svg aria-hidden="true" class="w-4 h-4 ml-2 -mr-1" fill="currentColor"
+                                         viewBox="0 0 20 20"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                              d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                                              clip-rule="evenodd"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        {% else %}
+                            <a href="#"
+                               class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                En savoir plus
+                                <svg aria-hidden="true" class="w-4 h-4 ml-2 -mr-1" fill="currentColor"
+                                     viewBox="0 0 20 20"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                          d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                                          clip-rule="evenodd"></path>
+                                </svg>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            {% if is_granted('ROLE_OWNER') %}
+                <div class="m-auto text-center mt-5 mb-5">
+                    <h1>Vous n'avez aucun appartement enregistré.</h1>
+                    <p><a href="{{ path('new_appartement', {id: app.user.id}) }}"
+                          class="btn-primary inline-flex items-center px-2 py-1 rounded-lg text-sm font-medium text-center">Ajouter</a>
+                        de nouveaux appartements.</p>
+                </div>
+            {% else %}
+                <div class="m-auto text-center mt-5 mb-5">
+                    <h1>Aucun appartement disponible.</h1>
+                </div>
+            {% endif %}
+        {% endif %}
     </div>
-  </div>
-</div>
 {% endblock %}
